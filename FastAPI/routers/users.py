@@ -1,7 +1,7 @@
-from fastapi import FastAPI
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
-app = FastAPI()
+router = APIRouter()
 
 # el servidor se inicia con: python -m uvicorn FastAPI.users:app --reload
 
@@ -19,22 +19,22 @@ users_list = [User(id=1,name='Pablo', surname='Hurtado', url='https://phdsystems
          User(id=3,name='Martha', surname='Díaz', url='https://mdsystems.net', age=45)]
 
 
-@app.get('/usersjson')
+@router.get('/usersjson')
 async def usersjson():
   return [{'name':'Pablo', 'surname':'Hurtado', 'url':'https://phdsystems.net', 'age':60},
           {'name':'Antonio', 'surname':'Díaz', 'url':'https://adsystems.net', 'age':20},
           {'name':'Martha', 'surname':'Díaz', 'url':'https://mdsystems.net', 'age':45},
           ]
 
-@app.get('/usersclass')
+@router.get('/usersclass')
 async def usersclass():
   return User(name='Pablo', surname='Hurtado', url='https://phdsystems.net', age=60)
 
-@app.get('/users')
+@router.get('/users')
 async def users():
   return users_list
 
-@app.get('/user/{id}')
+@router.get('/users/{id}')
 async def users(id: int):
   return search_user(id)
 
@@ -49,16 +49,17 @@ def search_user(id: int):
   except:
     return 'Error: Ne se ha encotrado el usuario'
   
-@app.post('/users/')
+@router.post('/users/',status_code=201)
 async def user(user: User):
   if type(search_user(user.id)) == User:
-    return 'Error: El usuario ya existe'
+    raise HTTPException(status_code=204, detail='El usuario ya existe')
+    # return 'Error: El usuario ya existe'
   else:
     users_list.append(user)
 
   return user
 
-@app.put('/user/')
+@router.put('/user/')
 async def user(user: User):
   found = False
   for index, saved_user in enumerate(users_list):
@@ -71,7 +72,7 @@ async def user(user: User):
   
   return user
 
-@app.delete('/user/{id}')
+@router.delete('/users/{id}')
 async def user(id: int):
   for index, saved_user in enumerate(users_list):
     if saved_user.id == id:
