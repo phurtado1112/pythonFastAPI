@@ -16,7 +16,7 @@ app.include_router(products.router)
 app.include_router(users.router)
 
 app.include_router(basic_auth_users.router)
-app.include_router(jwt_auth_users.router)
+# app.include_router(jwt_auth_users.router)
 app.include_router(users_db.router)
 
 app.mount('/static', StaticFiles(directory='FastAPI/static'), name='static')
