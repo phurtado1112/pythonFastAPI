@@ -11,6 +11,7 @@ Es necesario instalar un servidor local de MongoDB Community Edition en local qu
 Para acceder al servidor necesitas el comonado python -m uvicorn FastAPI.main:app --reload
 
 Se necesita ejecutar el request http://127.0.0.1:8000/userdb con:
+
   1) No Authentication Selected
   2) Body con formato JSON 
    ```
